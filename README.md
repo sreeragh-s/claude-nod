@@ -1,65 +1,67 @@
 # claude-nod
 
-AI Assistant Permission Manager - Visual overlay for approving AI tool execution requests
+Claude-nod - Visual overlay for approving claude code permissions form anywhere 
 
-## Quick Start
+A beautiful macOS menu bar app that gives you visual control over AI assistant tool requests, with keyboard shortcuts and real-time diff previews.
 
-### For End Users
+## ⚡ Quick Installation
 
-1. **Download the DMG** from releases
-2. **Install**: Drag claude-nod to Applications folder
-3. **Setup**: Run the automated setup script
+**One-line installer** (recommended):
+```bash
+curl -fsSL https://raw.githubusercontent.com/sreeragh-s/claude-nod/main/setup.sh | bash
+```
+
+This will:
+- ✅ Download and install claude-nod
+- ✅ Configure MCP integration
+- ✅ Request system permissions
+- ✅ Launch the app
+
+**Manual Installation:**
+1. Download the [latest DMG release](https://github.com/sreeragh-s/claude-nod/releases)
+2. Drag claude-nod to Applications folder
+3. Run setup:
    ```bash
    curl -fsSL https://raw.githubusercontent.com/sreeragh-s/claude-nod/main/setup.sh | bash
-   ```
-   Or run locally:
-   ```bash
-   ./setup.sh
    ```
 
 📖 See [SETUP.md](SETUP.md) for quick setup or [INSTALLATION.adoc](INSTALLATION.adoc) for comprehensive documentation.
 
-## Development
+## 🛠️ Development
 
 ### Recommended IDE Setup
 
 - [VSCode](https://code.visualstudio.com/) + [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) + [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
 
-## Project Setup
-
-### Install
+### Project Setup
 
 ```bash
-$ npm install
+# Install dependencies
+npm install
+
+# Run in development mode
+npm run dev
+
+# Build for macOS (DMG installer)
+npm run build:mac
+
+# Build unpacked (for testing)
+npm run build:unpack
+
+# Generate app icons from SVG
+npm run icons
 ```
 
-### Development
+### Building the DMG Installer
 
 ```bash
-$ npm run dev
-```
-
-### Build
-
-```bash
-# For macOS (DMG installer)
-$ npm run build:mac
-
-# Unpacked (for testing)
-$ npm run build:unpack
-```
-
-## Building the DMG Installer
-
-```bash
-# Clean build
+# Clean previous builds
 rm -rf dist/ out/
 
 # Build DMG
 npm run build:mac
 
-# DMG will be created at:
-# dist/claude-nod-0.0.1.dmg
+# Output: dist/claude-nod-0.0.1.dmg
 ```
 
 The DMG includes:
@@ -67,37 +69,32 @@ The DMG includes:
 - Pre-configured for menubar integration
 - Unsigned (for development)
 
-## Features
+## ✨ Features
 
 - **Visual Permission Overlay** - Beautiful UI for approving/rejecting AI tool requests
-- **Keyboard Shortcuts** - Quick approval/rejection (Cmd+A, Cmd+R, Cmd+D)
-- **MCP Integration** - Works with Model Context Protocol
-- **Menu Bar App** - Runs in the background, accessible from menu bar
-- **Diff Viewer** - Preview file changes before approval
+- **Keyboard Shortcuts** - Quick actions (⌘A approve, ⌘R reject, ⌘D details)
+- **MCP Integration** - Works seamlessly with Model Context Protocol
+- **Menu Bar App** - Runs in background, accessible from macOS menu bar
+- **Diff Viewer** - Preview file changes before approval with syntax highlighting
+- **Smart Notifications** - Desktop notifications for approval requests
 - **Auto-start** - Optional launch on login
+- **Secure** - All approvals are explicit and transparent
 
-## Post-Installation Setup
+## 📚 Documentation
 
-After installing the app, run the setup script to configure:
-
-```bash
-./setup.sh
-```
-
-This will:
-- ✅ Remove macOS quarantine
-- ✅ Create default configuration
-- ✅ Setup Claude Desktop integration
-- ✅ Request system permissions
-- ✅ Add to Login Items (optional)
-- ✅ Start the app and test connection
-
-## Documentation
-
-- [SETUP.md](SETUP.md) - Quick setup guide
+- [SETUP.md](SETUP.md) - Quick setup guide (2 minutes)
+- [QUICKSTART.md](QUICKSTART.md) - Quick reference card
 - [INSTALLATION.adoc](INSTALLATION.adoc) - Comprehensive installation and configuration guide
 - [MCP Integration Guide](INSTALLATION.adoc#setting-up-model-context-protocol-mcp) - Setting up Model Context Protocol
 
-## License
+## 🤝 Contributing
 
-MIT
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## 📄 License
+
+MIT - See [LICENSE](LICENSE) for details.
+
+## ⭐ Support
+
+If you find this project helpful, please give it a star on GitHub!
