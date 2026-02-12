@@ -1,0 +1,477 @@
+= claude-nod Installation & Setup Guide
+:toc:
+:toclevels: 3
+:numbered:
+
+== Overview
+
+*claude-nod* is an AI assistant permission manager that provides a visual overlay for approving or rejecting AI tool execution requests. This guide covers building the DMG installer and setting up the application on a new macOS system.
+
+== Prerequisites
+
+=== System Requirements
+
+* macOS 10.13 (High Sierra) or later
+* Node.js 18.x or later
+* npm 9.x or later
+* Xcode Command Line Tools (for building)
+
+=== Development Dependencies
+
+[source,bash]
+----
+# Install Node.js using Homebrew (if not already installed)
+brew install node
+
+# Verify installations
+node --version
+npm --version
+----
+
+== Building the DMG Installer
+
+=== Step 1: Clone and Setup Project
+
+[source,bash]
+----
+# Clone the repository
+git clone <repository-url>
+cd claude-permission
+
+# Install dependencies
+npm install
+
+# Install app dependencies for Electron
+npm run postinstall
+----
+
+=== Step 2: Build the Application
+
+[source,bash]
+----
+# Build the DMG installer for macOS
+npm run build:mac
+----
+
+This command will:
+
+1. Compile TypeScript files
+2. Bundle the React frontend
+3. Package the Electron app
+4. Create a DMG installer in the `dist/` directory
+
+[NOTE]
+====
+The build process creates:
+
+* `dist/claude-nod-1.0.0.dmg` - DMG installer
+* `dist/claude-nod-1.0.0-mac.zip` - ZIP archive
+* `dist/mac-arm64/claude-nod.app` - Unsigned app bundle
+====
+
+=== Step 3: Locate the DMG File
+
+After successful build:
+
+[source,bash]
+----
+ls -lh dist/*.dmg
+# Output: dist/claude-nod-1.0.0.dmg
+----
+
+=== Build Configuration
+
+The DMG is configured in `electron-builder.yml`:
+
+[source,yaml]
+----
+appId: com.claude.nod
+productName: claude-nod
+mac:
+  identity: null  # Unsigned for development
+  category: public.app-category.productivity
+  target:
+    - dmg
+    - zip
+dmg:
+  title: "${productName} ${version}"
+  iconSize: 80
+  contents:
+    - x: 130
+      y: 220
+    - x: 410
+      y: 220
+      type: link
+      path: /Applications
+  window:
+    width: 540
+    height: 380
+----
+
+== Installing on a New Mac
+
+=== Installation Steps
+
+1. **Download or Transfer the DMG**
++
+[source,bash]
+----
+# If transferring via USB or network
+# Copy dist/claude-nod-1.0.0.dmg to the new Mac
+----
+
+2. **Mount the DMG**
++
+* Double-click `claude-nod-1.0.0.dmg`
+* A new window will open showing the app icon and Applications folder
+
+3. **Install the Application**
++
+* Drag the `claude-nod` icon to the `Applications` folder
+* Wait for the copy to complete
+
+4. **Eject the DMG**
++
+* Right-click the mounted DMG in Finder sidebar
+* Select "Eject"
+
+5. **First Launch**
++
+[source,bash]
+----
+# Navigate to Applications
+open /Applications
+
+# Right-click claude-nod and select "Open"
+# Or launch from Terminal:
+open -a claude-nod
+----
+
+[IMPORTANT]
+====
+On first launch, macOS may show a security warning because the app is unsigned. Click "Open" to proceed.
+
+To bypass Gatekeeper for unsigned apps:
+[source,bash]
+----
+xattr -cr /Applications/claude-nod.app
+----
+====
+
+== Setting Up Model Context Protocol (MCP)
+
+=== What is MCP?
+
+Model Context Protocol (MCP) is a standardized protocol that allows AI assistants to securely request and execute tools with user approval. claude-nod integrates with MCP to provide visual permission prompts.
+
+=== MCP Configuration
+
+==== 1. Install MCP Server
+
+The MCP server needs to be installed separately. Common MCP servers include:
+
+* Claude Desktop MCP Server
+* Custom MCP implementations
+
+[source,bash]
+----
+# Example: Install Claude Desktop (if using Claude)
+brew install --cask claude
+
+# Or install via direct download from:
+# https://claude.ai/download
+----
+
+==== 2. Configure MCP to Use claude-nod
+
+Edit the MCP configuration file to integrate with claude-nod:
+
+[source,bash]
+----
+# For Claude Desktop, edit:
+~/Library/Application Support/Claude/config.json
+----
+
+Add permission handler configuration:
+
+[source,json]
+----
+{
+  "mcpServers": {
+    "your-server": {
+      "command": "node",
+      "args": ["/path/to/your/mcp-server"],
+      "env": {
+        "PERMISSION_HANDLER": "claude-nod"
+      }
+    }
+  },
+  "permissionHandler": {
+    "type": "external",
+    "endpoint": "http://localhost:54321/permissions"
+  }
+}
+----
+
+==== 3. Launch claude-nod
+
+[source,bash]
+----
+# Launch from Applications folder
+open -a claude-nod
+
+# Or add to Login Items for auto-start:
+# System Settings > General > Login Items > Add claude-nod
+----
+
+==== 4. Verify Integration
+
+1. Start your MCP-enabled AI assistant
+2. Trigger a tool execution request
+3. The claude-nod overlay should appear with permission prompt
+4. Approve or reject the request
+
+== Application Features
+
+=== Permission Overlay
+
+* **Visual Overlay**: Shows tool execution details in an elegant overlay window
+* **Keyboard Shortcuts**: 
+  - `Cmd+A` - Approve
+  - `Cmd+R` - Reject
+  - `Cmd+D` - Approve and don't ask again
+* **Diff View**: Shows file changes before applying
+* **Feedback Form**: Provide feedback on tool requests
+
+=== Menu Bar Integration
+
+claude-nod runs as a menu bar application:
+
+* Click the menu bar icon to view status
+* Toggle overlay visibility
+* Access settings and preferences
+* View recent permissions
+
+=== Configuration
+
+Edit configuration file:
+
+[source,bash]
+----
+~/Library/Application Support/claude-nod/config.json
+----
+
+Example configuration:
+
+[source,json]
+----
+{
+  "autoStart": true,
+  "port": 54321,
+  "theme": "system",
+  "notifications": {
+    "enabled": true,
+    "sound": true
+  },
+  "shortcuts": {
+    "approve": "Cmd+A",
+    "reject": "Cmd+R",
+    "approveAll": "Cmd+D"
+  }
+}
+----
+
+== Troubleshooting
+
+=== App Won't Open
+
+[source,bash]
+----
+# Remove quarantine attribute
+xattr -dr com.apple.quarantine /Applications/claude-nod.app
+
+# Check for errors
+/Applications/claude-nod.app/Contents/MacOS/claude-nod
+----
+
+=== MCP Connection Issues
+
+[source,bash]
+----
+# Check if claude-nod is running
+ps aux | grep claude-nod
+
+# Check port availability
+lsof -i :54321
+
+# View logs
+tail -f ~/Library/Logs/claude-nod/main.log
+----
+
+=== Permission Overlay Not Showing
+
+1. Verify Screen Recording permission:
+   * System Settings > Privacy & Security > Screen Recording
+   * Enable for claude-nod
+
+2. Verify Accessibility permission:
+   * System Settings > Privacy & Security > Accessibility
+   * Enable for claude-nod
+
+=== Reset to Defaults
+
+[source,bash]
+----
+# Remove configuration
+rm -rf ~/Library/Application\ Support/claude-nod
+
+# Remove cached data
+rm -rf ~/Library/Caches/claude-nod
+
+# Restart the app
+open -a claude-nod
+----
+
+== Uninstallation
+
+[source,bash]
+----
+# Stop the app
+killall claude-nod
+
+# Remove application
+rm -rf /Applications/claude-nod.app
+
+# Remove user data (optional)
+rm -rf ~/Library/Application\ Support/claude-nod
+rm -rf ~/Library/Preferences/com.claude.nod.plist
+rm -rf ~/Library/Caches/claude-nod
+rm -rf ~/Library/Logs/claude-nod
+----
+
+== Development & Testing
+
+=== Run in Development Mode
+
+[source,bash]
+----
+# Start development server
+npm run dev
+
+# Run with hot reload
+npm run start
+----
+
+=== Build for Testing
+
+[source,bash]
+----
+# Build unpacked version (faster)
+npm run build:unpack
+
+# Test the unpacked app
+open dist/mac-arm64/claude-nod.app
+----
+
+=== Debugging
+
+[source,bash]
+----
+# Enable debug logging
+DEBUG=claude-nod:* npm run dev
+
+# Open Chrome DevTools
+# In the running app: Cmd+Option+I
+----
+
+== Additional Resources
+
+=== Documentation
+
+* link:README.md[Project README]
+* link:https://www.electronjs.org/docs[Electron Documentation]
+* link:https://modelcontextprotocol.io[MCP Documentation]
+
+=== Support
+
+* GitHub Issues: <repository-url>/issues
+* Email: support@example.com
+
+== Appendix
+
+=== Complete Build Script
+
+Create a build script for convenience:
+
+[source,bash]
+----
+#!/bin/bash
+# build-dmg.sh
+
+set -e
+
+echo "🔨 Building claude-nod DMG installer..."
+
+# Clean previous builds
+rm -rf dist/ out/
+
+# Install dependencies
+echo "📦 Installing dependencies..."
+npm install
+
+# Build the app
+echo "⚡ Building application..."
+npm run build:mac
+
+# Verify DMG was created
+if [ -f "dist/claude-nod-1.0.0.dmg" ]; then
+    echo "✅ DMG created successfully!"
+    echo "📍 Location: dist/claude-nod-1.0.0.dmg"
+    ls -lh dist/claude-nod-1.0.0.dmg
+else
+    echo "❌ DMG build failed"
+    exit 1
+fi
+
+echo "🎉 Build complete!"
+----
+
+Make it executable:
+
+[source,bash]
+----
+chmod +x build-dmg.sh
+./build-dmg.sh
+----
+
+=== Signing the App (Optional)
+
+For production distribution with code signing:
+
+[source,bash]
+----
+# Install Apple Developer certificate
+# Update electron-builder.yml:
+
+mac:
+  identity: "Developer ID Application: Your Name (TEAM_ID)"
+  hardenedRuntime: true
+  gatekeeperAssess: false
+  entitlements: build/entitlements.mac.plist
+  entitlementsInherit: build/entitlements.mac.plist
+  notarize: true
+
+# Set environment variables
+export APPLE_ID="your@email.com"
+export APPLE_ID_PASSWORD="app-specific-password"
+export APPLE_TEAM_ID="YOUR_TEAM_ID"
+
+# Build signed DMG
+npm run build:mac
+----
+
+---
+
+*Version:* 1.0.0 +
+*Last Updated:* February 2026 +
+*License:* MIT
