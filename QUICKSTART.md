@@ -6,7 +6,7 @@
 
 1. **Run Setup Script** (Recommended)
    ```bash
-   curl -fsSL https://raw.githubusercontent.com/YOUR_REPO/setup.sh | bash
+   curl -fsSL https://raw.githubusercontent.com/sreeragh-s/claude-nod/main/setup.sh | bash
    ```
 
 2. **Or Manual Setup**

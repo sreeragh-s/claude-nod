@@ -1,6 +1,6 @@
 {
   "name": "claude-nod",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "Claude Nod - AI Assistant Permission Manager",
   "main": "./out/main/index.js",
   "author": "example.com",
@@ -16,9 +16,8 @@
     "build": "npm run typecheck && electron-vite build",
     "postinstall": "electron-builder install-app-deps",
     "build:unpack": "npm run build && electron-builder --dir",
-    "build:win": "npm run build && electron-builder --win",
     "build:mac": "electron-vite build && electron-builder --mac",
-    "build:linux": "electron-vite build && electron-builder --linux",
+    "icons": "bash scripts/generate-icons.sh",
     "test:overlay": "node scripts/test-overlay.js",
     "install:hook": "bash scripts/install-hook.sh"
   },

@@ -5,14 +5,14 @@
 After installing claude-nod (drag to Applications), run this single command:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/YOUR_REPO/setup.sh | bash
+curl -fsSL https://raw.githubusercontent.com/sreeragh-s/claude-nod/main/setup.sh | bash
 ```
 
 Or download and run locally:
 
 ```bash
 # Download the setup script
-curl -O https://raw.githubusercontent.com/YOUR_REPO/setup.sh
+curl -O https://raw.githubusercontent.com/sreeragh-s/claude-nod/main/setup.sh
 
 # Make it executable
 chmod +x setup.sh

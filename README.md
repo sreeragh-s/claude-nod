@@ -10,7 +10,7 @@ AI Assistant Permission Manager - Visual overlay for approving AI tool execution
 2. **Install**: Drag claude-nod to Applications folder
 3. **Setup**: Run the automated setup script
    ```bash
-   curl -fsSL https://raw.githubusercontent.com/YOUR_REPO/setup.sh | bash
+   curl -fsSL https://raw.githubusercontent.com/sreeragh-s/claude-nod/main/setup.sh | bash
    ```
    Or run locally:
    ```bash
@@ -45,12 +45,6 @@ $ npm run dev
 # For macOS (DMG installer)
 $ npm run build:mac
 
-# For Windows
-$ npm run build:win
-
-# For Linux
-$ npm run build:linux
-
 # Unpacked (for testing)
 $ npm run build:unpack
 ```
@@ -65,7 +59,7 @@ rm -rf dist/ out/
 npm run build:mac
 
 # DMG will be created at:
-# dist/claude-nod-1.0.0.dmg
+# dist/claude-nod-0.0.1.dmg
 ```
 
 The DMG includes:
